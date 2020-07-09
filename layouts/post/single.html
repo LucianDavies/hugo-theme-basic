@@ -29,11 +29,12 @@
       {{ if and (.Site.Taxonomies.series) (isset .Params "series") }}
         <section class="mt4">
           {{ $readMore := ":wave:" }}
-          {{ $series := .Params.series | urlize}}
-          <h3>{{ $readMore | emojify }} Related posts in the <a href="/series/{{ $series }}" class="b bb bw1 pb1 no-underline black">{{ .Params.Series }}</a> series...</h3>
-      
-          {{ $posts := index .Site.Taxonomies.series $series }}
-         
+          {{ $series := index (.Params.series) 0 }}
+          {{ $series_urlize := $series | urlize}}
+          <h3>{{ $readMore | emojify }} Related posts in the <a href="/series/{{ $series }}" class="b bb bw1 pb1 no-underline black">{{ $series }}</a> series...</h3>
+     
+          {{ $posts := index .Site.Taxonomies.series $series_urlize }}
+
           {{ if (gt ($posts | len) 1)}}
             <ul class="list pl0">
               {{ range where $posts "Title" "!=" .Title }}
