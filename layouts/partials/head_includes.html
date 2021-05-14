@@ -3,6 +3,11 @@
   href="https://unpkg.com/tachyons@4.11.1/css/tachyons.min.css"
 />
 
-<link rel="stylesheet" href="{{ .Site.BaseURL }}/css/style.css" />
 
-{{ template "_internal/google_analytics_async.html" . }}
+{{- $styles := resources.Get "css/style.css" | postCSS (dict "config" "./assets/css/postcss.config.js") -}}
+  {{- if .Site.IsServer }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}">
+  {{ else }}
+    {{- $styles := $styles| minify | fingerprint | resources.PostProcess -}}
+    <link rel="stylesheet" href="{{ $styles.Permalink }}" integrity="{{ $styles.Data.Integrity }}">
+  {{ end -}}
